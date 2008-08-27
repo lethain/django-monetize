@@ -34,3 +34,94 @@ The end.
 2. Add ``django_monetize`` to your ``INSTALLED_APPS`` setting in your ``settings.py`` file.
 3. ?
 4. Profit.
+
+
+## Monetizaton Options
+
+Here are some monetizations that already have built-in support. If you can't find what you're looking for, remember that you can always roll your own!
+
+### Amazon Affiliates: Omakase
+
+Amazon Affiliate's Omakase widget (Japanese for 'leave it to us') creates and displays a banner that is targeted for your page's content, without you doing any work.
+
+It requires one settings in the ``MONETIZE_CONTENT`` dictionary: ``amazon_affiliates_id``, and uses the ``django_monetize/amazon_omakase.html`` template.
+
+Example:
+
+    MONETIZE_CONTEXT = {
+        'amazon_affiliates_id':'yourAffiliatesID',
+    }
+    # use default 728 width by 90 height values
+    MONETIZE_DEFAULT = 'django_monetize/amazon_omakase.html'
+    # You can customize width/height, but must be one of these pairs:
+    # 120x600, 120x240, 160x600, 180x150, 468x60, 300x250, 600x520
+    MONETIZE_DEFAULT = ['django_monetize/amazon_omakase.html',120,600]
+
+Surrounded by div with CSS class ``amazon_makase``.
+
+### Amazon Honor System
+
+[Amazon Honor System](http://zme.amazon.com/) allows easy donations.
+
+In the ``MONETIZE_CONTEXT`` dict in your ``settings.py`` file you'll need to specify your paypage url as the value for key ``amazon_paypage``.
+
+Specify ``django_monetize/amazon_honor.html`` as the template to use the default Amazon honor request.
+
+Example:
+
+    MONETIZE_CONTEXT = {
+        'amazon_paypage':'http://www.amazon.com/pagepage/some-random-has/'
+    }
+    MONETIZE_DEFAULT = "django_monetize/amazon_honor.html"
+
+Surrounded by div with CSS class ``amazon_donate``.
+
+### Dreamhost Referrals
+
+Not yet implemented.
+
+### Google Adsense
+
+Not yet implemented.
+
+### Paypal Donations
+
+If you have a [PayPal](http://www.paypal.com) account, another option for monetization is using PayPal donations.
+
+In your settings.py's ``MONETIZE_CONTEXT`` dict you'll need to specify a handful of values to use this option: ``paypal_business``, ``paypal_item_name``, ``paypal_currency_code``, ``paypal_tax``, ``paypal_lc``, ``paypal_bn``, and ``paypal_image``. The value ``paypal_amount`` is optional, and may be used to specify the size of the donation, otherwise the amount is up to the donator.
+
+It uses the ``django_monetize/paypal_donate.html`` template.
+
+Example:
+
+    MONETIZE_CONTEXT = {
+        'paypal_business':'your_paypal_account@gmail.com',
+        'paypal_item_name':'My Awesome Website',
+        'paypal_currency_code':'USD',
+        'paypal_amount': '5.00', # optional
+        'paypal_tax':'0',
+        'paypal_lc':'US',
+        'paypal_bn':'PP-DonationsBF',
+        'paypal_image':'http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif'
+    }
+    MONETIZE_DEFAULT = "django_monetize/paypal_donate.html"
+
+Surrounded by div with CSS class ``paypal_donate``.
+
+### SliceHost Referals
+
+For those of us using SliceHost, we know there isn't a better VPS on the planet. Since we like to share that joy, sometimes we like send a few referrals their way.
+
+Uses the ``django_monetize/slicehost_referral.html`` template.
+
+Requires the ``slicehost_referral_id`` value in the ``MONETIZE_CONTEXT`` dictionary. It is the id at the end of the link if login to your SliceHost account, go to the ``Acount`` section, and then click on ``Referrals``. (The number after the question mark near the end of the url.)
+
+Example:
+
+    MONETIZE_CONTEXT = {
+        'slicehost_referral_id':'123456789',
+    }
+    MONTIZE_DEFAULT = "slicehost_referral.html"
+
+Is surrounded by a div with the CSS class ``slicehost_referral``.
+    
