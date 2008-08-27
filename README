@@ -1,0 +1,36 @@
+
+## Overview of ``django-monetize``
+
+``django-monetize`` a Django application that intends to facilitate optimizing website monetization. It has a two tiered approach to this:
+
+1.  Supporting a wide variety of monetization options: advertising, amazon affiliates, donations and custom made ads.
+
+2. Allow a high degree of context-based targeting and customization.
+
+Lets give some examples of what ``django-monetize`` can do.
+
+### A Hypothetical Case Study: Will Larson and His Blog
+
+In a far away universe, long long ago, there was a blogger and Django developer named Will Larson. He enjoyed blogging very much, but began to wonder why he spent so much time blogging when his blog didn't even cover its hosting fees. Since he used a VPS for hosting, and only got 20-30k pageviews per month he knew any strategy as simply as throwing Google AdSense on his page wasn't going to be sufficient.
+
+Worse yet, he was well aware that much of his traffic was from programmers and other technological types, and that they were afflicted with a blight called ad... ad... well, whatever it was called, they never even noticed ads on most pages.
+
+However, he knew that these tech types liked to purchase technical books, and that also that some individuals might even appreciate particularly indepth tutorials enough to donate a few coins his way.
+
+The problem was that he wanted to advertise different books for different topics, and only wanted to ask for donations for particularly long works. He was very, very sad.
+
+Thankfully, one day he found a leprechaun in the bushes nearby his home. The leprechaun offered him one wish, and he wished for riches. The wise leprechaun knew if he gave Will a fortune, he might not be wise enough to invest it in the turmultuous stock market, and instead he gave him a gift that would allow him to reap riches for years to come: ``django-monetize``.
+
+Using ``django-monetize``, Will was able to do some amazing things. He was already tagging his contents, and was able to display different monetization techniques depending on the tag for the current content being displayed. For articles in a series about PyObjC, he was able to display a donation box pleading for relief from his intense poverty for anyone who found his epic tutorial helpful. For blog entries tagged with Django he was able to advertise a custom ad for the Django Book. For blog entries tagged with cooking he was able to just use ad sense, since people who read about cooking might not be the afflicted with the cruel plague of ad blindness.
+
+Everyone lived happily ever after.
+
+The end.
+
+
+## Installation
+
+1. Add the ``django_monetize`` to your Python path. Likely your site folder.
+2. Add ``django_monetize`` to your ``INSTALLED_APPS`` setting in your ``settings.py`` file.
+3. ?
+4. Profit.
