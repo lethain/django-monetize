@@ -1,0 +1,16 @@
+<div class="paypal_donate">
+<form name="_xclick" action="https://www.paypal.com/us/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="{{ paypal_business }}">
+<input type="hidden" name="item_name" value="{{ paypal_item_name }}">
+<input type="hidden" name="no_shipping" value="0">
+<input type="hidden" name="no_note" value="1">
+<input type="hidden" name="currency_code" value="{{ paypal_currency_code }}">
+<input type="hidden" name="tax" value="{{ paypal_tax }}">
+<input type="hidden" name="lc" value="{{ paypal_lc }}">
+<input type="hidden" name="bn" value="{{ paypal_bn }}">
+{% if paypal_amount %}<input type="hidden" name="amount" value="{{ paypal_amount }}">{% endif %}
+<input type="image" src="{{ paypal_image }}" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+</div>
