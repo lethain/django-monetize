@@ -28,6 +28,10 @@ Everyone lived happily ever after.
 The end.
 
 
+## High Level Overview
+
+TBA
+
 ## Installation
 
 1. Add the ``django_monetize`` to your Python path. Likely your site folder.
@@ -35,6 +39,33 @@ The end.
 3. ?
 4. Profit.
 
+## Configuration
+
+One of the key focuses of ``django_monetize`` is to support a high degree of targetting. The logic for that targetting is stored in the ``MONETIZE_TARGET`` and ``MONETIZE_DEFAULT`` values in your project's settings.py file.
+
+For example, consider the simplest situation where you wanted to display AdSense ad units in all monetization slots:
+
+    MONETIZE_DEFAULT = 'django_monetize/adsense_ad_unit.html'
+
+Now lets say you want to display a link to an Amazon Affiliate's search results page when targetted on a list containing ``django`` (and otherwise default back to an Adsense ad unit):
+
+    MONETIZE_TARGET = {
+        'django':['django_monetize/amazon_search.html','Django books','Buy some Django books today!'],
+    }
+    MONETIZE_DEFAULT = 'django_monetize/adsense_ad_unit.html'
+
+Now lets say you have three ad slots on your page: 'header','footer', and 'side'. You can customize the contents of each slot for each term. For this example, lets not show any ads by default.
+
+    MONETIZE_TARGET = {
+        'django':{
+            'header':'django_monetize/adsense_ad_unit.html',
+            'footer':'django_monetize/slicehost_referral.html',
+	    # if you don't specify an ad for a slot, it uses the default ad instead
+        },
+    }
+    MONETIZE_DEFAULT = None
+
+Specifying an ad you either pass a string with the ads template, or you pass a list (or tuple) where the zeroth object is the template's string and the other objects are parameters for the rendering function. Whether or not a specific monetization option takes parameters varies, so you'll have to consult the documentation (or the source, if documentation is lacking).
 
 ## Monetizaton Options
 
@@ -79,7 +110,7 @@ Surrounded by div with CSS class ``amazon_makase``.
 
 For an Amazon Affiliate link to a search of Amazon's offerings.
 
-Uses the ``amazon_search.html`` template, and in the ``MONETIZE_CONTEXT`` dictionary it requires values ``amazon_affiliates_id``, ``amazon_search_terms`` and ``amazon_search_title``.
+Uses the ``django_monetize/amazon_search.html`` template, and in the ``MONETIZE_CONTEXT`` dictionary it requires values ``amazon_affiliates_id``, ``amazon_search_terms`` and ``amazon_search_title``.
 
 Example:
 
