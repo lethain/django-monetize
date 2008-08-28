@@ -40,6 +40,21 @@ The end.
 
 Here are some monetizations that already have built-in support. If you can't find what you're looking for, remember that you can always roll your own!
 
+### Amazon Affiliates: Custom Link
+
+Use this template along with your Amazon Affiliates account to create referral links for arbitrary Amazon URLs.
+
+Uses the ``amazon_custom_link.html`` template, and requires the ``amazon_affiliates_id``, ``amazon_custom_link_title``, and ``amazon_custom_link_url`` values in the ``MONETIZE_CONTEXT`` dictionary.
+
+    MONETIZE_CONTEXT = {
+        'amazon_affiliates_id='yourAffiliatesID',
+        'amazon_custom_link_title':'Look at the Kindle!',
+        'amazon_custom_link_url':'http://www.amazon.com/etc/etc',
+    }
+    MONETIZE_DEFAULT = 'django_monetize/amazon_custom_link.html'
+
+Is surrounded by a div with CSS class ``amazon_custom_link``.
+
 ### Amazon Affiliates: Omakase
 
 Amazon Affiliate's Omakase widget (Japanese for 'leave it to us') creates and displays a banner that is targeted for your page's content, without you doing any work.
@@ -58,6 +73,24 @@ Example:
     MONETIZE_DEFAULT = ['django_monetize/amazon_omakase.html',120,600]
 
 Surrounded by div with CSS class ``amazon_makase``.
+
+
+### Amazon Affiliates: Search Links
+
+For an Amazon Affiliate link to a search of Amazon's offerings.
+
+Uses the ``amazon_search.html`` template, and in the ``MONETIZE_CONTEXT`` dictionary it requires values ``amazon_affiliates_id``, ``amazon_search_terms`` and ``amazon_search_title``.
+
+Example:
+
+    MONETIZE_CONTEXT = {
+        'amazon_affiliates_id':'my_tracking_id',
+        'amazon_search_terms':'Django book',
+        'amazon_search_title':'Buy Django books on Amazon.com!',
+    }
+    MONETIZE_DEFAULT = "django_monetize/amazon_search.html"
+
+Is surrounded by a div with CSS class ``amazon_search``.
 
 ### Amazon Honor System
 
@@ -78,11 +111,38 @@ Surrounded by div with CSS class ``amazon_donate``.
 
 ### Dreamhost Referrals
 
-Not yet implemented.
+You can use Dreamhost referrals as a monetization option as well. At least theoretically. If you have no shame. And live life with a sadistic streak.
 
-### Google Adsense
+Uses the ``django_monetize/dreamhost_referral.html`` template. But... well, you'll see. You may want to rewrite it.
 
-Not yet implemented.
+Requires the ``dreamhost_referral_code`` value in the ``MONETIZE_CONTEXT`` dictionary.
+
+Example:
+
+    MONETIZE_CONTEXT = {
+        'dreamhost_referral_code':'123456',
+    }
+    MONETIZE_DEFAULT = "django_monetize/dreamhost_referral.html"
+
+Is wrapped in a div with the ``dreamhost_referral`` CSS class.
+
+### Google Adsense: Ad Unit
+
+Use this monetization option to display one unit of Google ads (not a link box).
+
+Uses the template ``django_monetize/adsense_ad_unit.html``.
+
+Requires the ``adsense_ad_unit_client``, ``adsense_ad_unit_slot``, ``adsense_ad_width``, and ``adsense_ad_height`` values in the ``MONETIZE_CONTEXT`` dictionary.
+
+Example:
+
+    MONETIZE_CONTEXT = {
+        'adsense_ad_unit_client':'ad client id',
+        'adsense_ad_unit_slot':'ad unit slot',
+        'adsense_ad_unit_width':336,
+        'adsense_ad_unit_height':280,
+    }
+    MONETIZE_DEFAULT = "django_monetize/adsense_ad_unit.html``
 
 ### Paypal Donations
 
