@@ -5,13 +5,13 @@ Usage (from within a template):
 
     {% load monetize %}
     
-    {% monetize-slot "top" object.tags %}
+    {% monetize_slot "top" object.tags %}
 
     <p> Some content. </p>
-    {% monetize-slot "bottom" request.META.HTTP_USER_AGENT %}
+    {% monetize_slot "bottom" request.META.HTTP_USER_AGENT %}
 
     <div class="sidebar">
-    {% monetize-slot "side bar" request.META object.tags "django" %}
+    {% monetize_slot "side bar" request.META object.tags "django" %}
     </div>
 
 
@@ -41,3 +41,106 @@ The first value matching a targeting value will be used. Values will be matched 
 Don't be fooled by the above example: ``django_monetize`` doesn't help you inject ``request`` into your templates' context; you'll have to handle that yourself.
 """
 
+from django import template
+from django.con import settings
+
+register = template.Library()
+
+@register.tag(name="monetize_slot")
+def monetize_slot(parser, token):
+    'Template tag for displaying a monetization option in a slot.'
+    lst = token.split_contents()
+    return MonetizeSlotNode(lst[1:])
+
+
+class MonetizeSlotNode(template.Node):
+    def __init__(self, *vals):
+        if len(vals) > 0:
+            self.slot = vals[0]
+            self.params = vals[1:]
+        else:
+            self.slot = None
+            self.params = ()
+
+    def render(self,context):
+        'Apply targeting and render monetization option for value/slot combo.'
+        target = self.acquire_target(self.params,context)
+        return self.target(target,self.slot,context)
+
+    def acquire_target(self,params,context):
+        'Go through parameters and try to find a valid targeting parameter.'
+        logic_dict = getattr(settings,'MONETIZE_TARGET',{})
+
+        for param in params:
+            try:
+                param = template.resolve_variable(param,context)
+            except template.VariableDoesNotExist:
+                pass
+            if type(param) == list or type(param) == tuple):
+                for x in param:
+                    x = unicode(x)
+                    if logic_dict.has_key(x):
+                        return x
+            elif type(param) == dict:
+                for x in dict.iteritems():
+                    x = unicode(x)
+                    if logic_dict.has_key(x):
+                        return x
+            else:
+                param = unicode(param)
+                if logic_dict.has_key(param):
+                    return param
+
+        return None
+
+    def target(self,value,slot,context):
+        '''
+        Returns the rendered text for 'value'. 'value' should be
+        the output of the 'choose_target' method.
+
+        Also be aware the distinction being made between
+        False and None. None refers to the concept of using
+        the default monetization option, while False refers
+        to not using a monetization option.
+        '''
+        logic_dict = getattr(settings,'MONETIZE_TARGET',{})
+        if logic_dict.has_key(value):
+            logic = logic_dict[value]
+        else:
+            logic = getattr(setting,"MONETIZE_DEFAULT",False)
+
+        # Deconstruct slot specific logic from dict.
+        if type(logic) == dict:
+            if logic.has_key(slot):
+                # Check for slot specific logic.
+                logic = logic[slot]
+            elif logic.has_key(None):
+                # Check for value specific default logic.
+                logic = logic[None]
+            else:
+                # Otherwise display nothing.
+                logic = False
+
+        if type(logic) == tuple or type(logic) == list:
+            context_dict = getattr(settings.'MONETIZE_CONTEXT',{}).copy()
+            if len(logic) == 0:
+                logic = False
+            else:
+                # load extra context from list
+                for key,val in logic[1:]:
+                    context_dict[key] = val
+        else:
+            context_dict = getattr(settings.'MONETIZE_CONTEXT',{})
+
+        # At this point ``logic`` should be a string for a template, or False
+
+        
+        if logic == False:
+            # False means no monetization option, so return empty string.
+            rendered = u""
+        else:           
+            new_context = Context(context_dict,context.autoescape)
+            t = template.loader.get_template(logic)
+            rendered = t.render(new_context)
+
+        return rendered

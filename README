@@ -50,9 +50,11 @@ For example, consider the simplest situation where you wanted to display AdSense
 Now lets say you want to display a link to an Amazon Affiliate's search results page when targetted on a list containing ``django`` (and otherwise default back to an Adsense ad unit):
 
     MONETIZE_TARGET = {
-        'django':['django_monetize/amazon_search.html','Django books','Buy some Django books today!'],
+        'django':['django_monetize/amazon_search.html',('amazon_search_terms','Django books'),('amazon_search_title','Buy some Django books today!')],
     }
     MONETIZE_DEFAULT = 'django_monetize/adsense_ad_unit.html'
+
+If you specify a monetization method using a list/tuple instead of a string, then the zeroth value is the template's string, and the remaining values are 2-tuples (or 2-lists) containing a key and a value, which are used to overwrite values in ``MONETIZE_CONTEXT`` for this specfic monetization.
 
 Now lets say you have three ad slots on your page: 'header','footer', and 'side'. You can customize the contents of each slot for each term. For this example, lets not show any ads by default.
 
@@ -60,10 +62,13 @@ Now lets say you have three ad slots on your page: 'header','footer', and 'side'
         'django':{
             'header':'django_monetize/adsense_ad_unit.html',
             'footer':'django_monetize/slicehost_referral.html',
-	    # if you don't specify an ad for a slot, it uses the default ad instead
+            None:'django_monetize/dreamhost_referral.html',
+            # Value for None specifies value for non-listed slots.
+	    # if you don't specify an ad for a slot, and don't specify
+            # a value default, then it won't display an ad.
         },
     }
-    MONETIZE_DEFAULT = None
+    MONETIZE_DEFAULT = False
 
 Specifying an ad you either pass a string with the ads template, or you pass a list (or tuple) where the zeroth object is the template's string and the other objects are parameters for the rendering function. Whether or not a specific monetization option takes parameters varies, so you'll have to consult the documentation (or the source, if documentation is lacking).
 
