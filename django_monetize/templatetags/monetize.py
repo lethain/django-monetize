@@ -42,7 +42,7 @@ Don't be fooled by the above example: ``django_monetize`` doesn't help you injec
 """
 
 from django import template
-from django.con import settings
+from django.conf import settings
 
 register = template.Library()
 
@@ -50,7 +50,7 @@ register = template.Library()
 def monetize_slot(parser, token):
     'Template tag for displaying a monetization option in a slot.'
     lst = token.split_contents()
-    return MonetizeSlotNode(lst[1:])
+    return MonetizeSlotNode(*lst[1:])
 
 
 class MonetizeSlotNode(template.Node):
@@ -65,6 +65,7 @@ class MonetizeSlotNode(template.Node):
     def render(self,context):
         'Apply targeting and render monetization option for value/slot combo.'
         target = self.acquire_target(self.params,context)
+        print "(%s, %s) --> %s" % (self.slot,self.params,target)
         return self.target(target,self.slot,context)
 
     def acquire_target(self,params,context):
@@ -73,16 +74,16 @@ class MonetizeSlotNode(template.Node):
 
         for param in params:
             try:
+                print "trying to resolve param: %s" % param
                 param = template.resolve_variable(param,context)
             except template.VariableDoesNotExist:
+                print "failed to resolve :("
                 pass
-            if type(param) == list or type(param) == tuple):
+            if type(param) == dict:
+                param = dict.iteritems()
+
+            if hasattr(param,'__iter__'):
                 for x in param:
-                    x = unicode(x)
-                    if logic_dict.has_key(x):
-                        return x
-            elif type(param) == dict:
-                for x in dict.iteritems():
                     x = unicode(x)
                     if logic_dict.has_key(x):
                         return x
@@ -107,7 +108,9 @@ class MonetizeSlotNode(template.Node):
         if logic_dict.has_key(value):
             logic = logic_dict[value]
         else:
-            logic = getattr(setting,"MONETIZE_DEFAULT",False)
+            logic = getattr(settings,"MONETIZE_DEFAULT",False)
+
+        #print "logic(%s) for slot(%s),value(%s)" % (logic,slot,value)
 
         # Deconstruct slot specific logic from dict.
         if type(logic) == dict:
@@ -121,8 +124,10 @@ class MonetizeSlotNode(template.Node):
                 # Otherwise display nothing.
                 logic = False
 
+        #print "(after dict) logic(%s) for slot(%s),value(%s)" % (logic,slot,value)
+
         if type(logic) == tuple or type(logic) == list:
-            context_dict = getattr(settings.'MONETIZE_CONTEXT',{}).copy()
+            context_dict = getattr(settings,'MONETIZE_CONTEXT',{}).copy()
             if len(logic) == 0:
                 logic = False
             else:
@@ -130,16 +135,19 @@ class MonetizeSlotNode(template.Node):
                 for key,val in logic[1:]:
                     context_dict[key] = val
         else:
-            context_dict = getattr(settings.'MONETIZE_CONTEXT',{})
+            context_dict = getattr(settings,'MONETIZE_CONTEXT',{})
+
+        #print "(after list) logic(%s) for slot(%s),value(%s)" % (logic,slot,value)
 
         # At this point ``logic`` should be a string for a template, or False
 
+        #print "(pre render) logic(%s) for slot(%s),value(%s)" % (logic,slot,value)
         
         if logic == False:
             # False means no monetization option, so return empty string.
             rendered = u""
-        else:           
-            new_context = Context(context_dict,context.autoescape)
+        else:
+            new_context = template.Context(context_dict,context.autoescape)
             t = template.loader.get_template(logic)
             rendered = t.render(new_context)
 
