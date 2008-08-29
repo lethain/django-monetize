@@ -65,7 +65,6 @@ class MonetizeSlotNode(template.Node):
     def render(self,context):
         'Apply targeting and render monetization option for value/slot combo.'
         target = self.acquire_target(self.params,context)
-        print "(%s, %s) --> %s" % (self.slot,self.params,target)
         return self.target(target,self.slot,context)
 
     def acquire_target(self,params,context):
@@ -74,10 +73,8 @@ class MonetizeSlotNode(template.Node):
 
         for param in params:
             try:
-                print "trying to resolve param: %s" % param
                 param = template.resolve_variable(param,context)
             except template.VariableDoesNotExist:
-                print "failed to resolve :("
                 pass
             if type(param) == dict:
                 param = dict.iteritems()
@@ -110,8 +107,6 @@ class MonetizeSlotNode(template.Node):
         else:
             logic = getattr(settings,"MONETIZE_DEFAULT",False)
 
-        #print "logic(%s) for slot(%s),value(%s)" % (logic,slot,value)
-
         # Deconstruct slot specific logic from dict.
         if type(logic) == dict:
             if logic.has_key(slot):
@@ -124,8 +119,6 @@ class MonetizeSlotNode(template.Node):
                 # Otherwise display nothing.
                 logic = False
 
-        #print "(after dict) logic(%s) for slot(%s),value(%s)" % (logic,slot,value)
-
         if type(logic) == tuple or type(logic) == list:
             context_dict = getattr(settings,'MONETIZE_CONTEXT',{}).copy()
             if len(logic) == 0:
@@ -137,12 +130,7 @@ class MonetizeSlotNode(template.Node):
         else:
             context_dict = getattr(settings,'MONETIZE_CONTEXT',{})
 
-        #print "(after list) logic(%s) for slot(%s),value(%s)" % (logic,slot,value)
-
         # At this point ``logic`` should be a string for a template, or False
-
-        #print "(pre render) logic(%s) for slot(%s),value(%s)" % (logic,slot,value)
-        
         if logic == False:
             # False means no monetization option, so return empty string.
             rendered = u""
