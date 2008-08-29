@@ -1,0 +1,34 @@
+{% load monetize %}
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>django_monetize</title>
+</head>
+
+<body>
+<h1>Django Monetize</h1>
+
+
+{% monetize_slot "header" "django" %}
+
+<p> ^^^ Header slot. Some content. VVV footer slot. </p>
+
+<p> Footer gets tags: {{ tags }} </p>
+
+{% monetize_slot "footer" tags %}
+
+<hr>
+
+<div class="sidebar">
+  <p> Sidebar (if you added CSS for it...) </p>
+  {% monetize_slot "sidebar" %}
+</div>
+
+<hr>
+
+<p> And finally, a slot without a slot name. </p>
+
+{% monetize_slot %}
+
+
+</body> </html>

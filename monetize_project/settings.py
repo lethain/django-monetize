@@ -1,5 +1,60 @@
 # Django settings for monetize_project project.
 
+import os
+ROOT_PATH = os.path.dirname(__file__)
+
+
+
+MONETIZE_CONTEXT = {
+    # Amazon Honor System
+    'amazon_paypage':'url',
+
+    # Amazon Affilliates (used for all others)
+    'amazon_affiliates_id':'affiliates_id',
+
+    # Amazon Affiliates: Custom Links
+    'amazon_custom_link_title':'Look at the Kindle!',
+    'amazon_custom_link_url':'http://www.amazon.com/etc/etc',
+
+    # Amazon Affilliates: Omakase
+    'amazon_omakase_width':'728',
+    'amazon_omakase_height':'90',
+
+    # Amazon Affiliates: Search
+    'amazon_search_terms':"Django book",
+    'amazon_search_title':"Search for Django books!",
+
+    # Slicehost Referrals
+    'slicehost_referral_id':'slicehost referal id',
+
+    # Dreamhost Referrals
+    'dreamhost_referral_code':'dreamhost referal id',
+
+    # Google AdSense: Ad Unit
+    'adsense_ad_unit_client':'ad unit client',
+    'adsense_ad_unit_slot':'ad slot id',
+    'adsense_ad_unit_width':'336',
+    'adsense_ad_unit_height':'280',
+
+    # Paypal
+    'paypal_business':'email',
+    'paypal_item_name':'name',
+    'paypal_currency_code':'USD',
+    'paypal_amount':None, # '5.00',
+    'paypal_tax':'0',
+    'paypal_lc':'US',
+    'paypal_bn':'PP-DonationsBF',
+    'paypal_image':'http://www.paypal.com/en_US/i/btn/btn_donate_LG.gif'
+}
+
+MONETIZE_TARGET = {
+    'django':'django_monetize/amazon_search.html',
+    'python':'django_monetize/paypal_donate.html',
+
+}
+
+MONETIZE_DEFAULT = 'django_monetize/slicehost_referral.html'
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -69,9 +124,11 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(ROOT_PATH, 'templates'),
 )
 
 INSTALLED_APPS = (
+    'django_monetize',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
