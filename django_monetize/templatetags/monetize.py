@@ -56,7 +56,7 @@ def monetize_slot(parser, token):
 class MonetizeSlotNode(template.Node):
     def __init__(self, *vals):
         if len(vals) > 0:
-            self.slot = vals[0]
+            self.slot = vals[0].strip('"')
             self.params = vals[1:]
         else:
             self.slot = None
