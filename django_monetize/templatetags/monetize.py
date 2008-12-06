@@ -127,6 +127,7 @@ class MonetizeSlotNode(template.Node):
                 # load extra context from list
                 for key,val in logic[1:]:
                     context_dict[key] = val
+                logic = logic[0]
         else:
             context_dict = getattr(settings,'MONETIZE_CONTEXT',{})
 
